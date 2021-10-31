@@ -1,12 +1,14 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { useState } from 'react'
+import { View, TextInput, Image, Button } from 'react-native'
 
-export default function Save(){
+export default function Save(props){
     const [caption, setCaption] = useState("")
+    console.log( props.route.params.image)
     // console.log(props.mediaTypes)
     const uploadImage = () => {
         //6-15
-        const uri =  sprops.route.params.image;
+        const uri =  props.route.params.image;
+        
         // const blob = await response.blob();
           //postint with axios to login
         // axios.post(url, params,{
@@ -43,10 +45,12 @@ export default function Save(){
         <View>
         <Image source={{ uri: props.route.params.image}}/>
         <TextInput
+            multiline={true}
+            numberOfLines={3}
             placeholder="write a Caption"
             onChangeText={(caption) => setCaption(caption)}
             />
-            <Button title="save" onpress={() => iploadImage()} />
+            <Button title="save" onpress={() => iploadImage()} style={{width:60, borderRadius:25 }}/>
         </View>
         
 

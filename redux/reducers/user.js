@@ -9,25 +9,28 @@ const initialState = {
     // userId: '',
     // token: '',
     currentUser: null,
-    posts: null,
+    usersPosts: null,
     // following: [],
 }
 
 
 export const user = (state = initialState, action) => {
+    console.log(state)
     switch(action.type){
-        case USER_STATE_CHANGE:
-            console.log('USER_STATE_CHANGE')
-            return {
-                ...State,
-                currentUser: action.currentUser
-            }
         case USER_POSTS_STATE_CHANGE:
             console.log('USER_POSTS_STATE_CHANGE')
                 return {
                     ...State,
-                    posts: action.posts
-                };
+                    usersPosts: action.usersPosts
+                }
+        case USER_STATE_CHANGE:
+           
+            
+            return {
+                ...State,
+                currentUser: action.currentUser
+            }
+       
         // case SET_LOGIN_STATE:
         //     return {
         //       ...state,

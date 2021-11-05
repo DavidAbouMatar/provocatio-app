@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {view, Text } from 'react-native'
+import {View, Text } from 'react-native'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import {connect } from 'react-redux'
@@ -9,6 +9,7 @@ import { fetchUser, fetchUserPosts, fetchUsersData } from '../redux/actions/inde
 import FeedScreen from './main/Feed'
 import ProfileScreen from './main/Profile'
 import Searchcreen from './main/Search'
+import testhcreen from './main/test'
 
 import ChatListScreen from './main/ChatList'
 
@@ -21,7 +22,7 @@ const EmptyScreen = () => {
 export class Main extends Component {
     componentDidMount(){
         this.props.fetchUser();
-        // this.props.fetchUsersData();
+        this.props.fetchUsersData();
         // this.props.fetchUserPosts();
         // await this.this.props.fetchUserPost/s();
   
@@ -47,6 +48,7 @@ export class Main extends Component {
 
         console.log("posts",this.props)
         console.log("currentUser",currentUser)
+        console.log("currentUser",usersPosts)
        
     
         // console.log("ffff", currentUser.gender);
@@ -60,8 +62,8 @@ export class Main extends Component {
        
        
         return (
-      
-            <Tab.Navigator initialRouteName="Feed" labeled={false}>
+            <View style={{ flex: 1 }}>
+            <Tab.Navigator initialRouteName="Feed" labeled={false} >
             <Tab.Screen name="Feed" component={FeedScreen}
                 options={{
                    
@@ -118,6 +120,7 @@ export class Main extends Component {
                     ),
             }} />
           </Tab.Navigator>
+          </View>
         )
     }
 
@@ -140,7 +143,8 @@ export class Main extends Component {
 // export default connect(mapStateToProps, mapDispatchProps)(Main);
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
-    usersPosts: store.userState.usersPosts
+    userPosts: store.userState.userPosts,
+  
 })
 const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUser, fetchUserPosts, fetchUsersData }, dispatch);
 

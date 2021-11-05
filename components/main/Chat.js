@@ -1,125 +1,91 @@
 import React, { useState, useCallback, useEffect } from 'react'
 import { GiftedChat } from 'react-native-gifted-chat'
 import Pusher from 'pusher-js/react-native';
+import { connect, useDispatch } from "react-redux";
 import axios from "axios";
 
 export function Chat(props) {
   const [messages, setMessages] = useState([]);
+  const [text, setText] = useState([]);
   const [rightMessages, setrightMessages] = useState([]);
 
-
-  console.log("kkkkkkkk",props.route.params.uid)
-
+  const { token } = props;
+  const { currentUser } = props;
   useEffect(() => {
-    console.log("kkkkkkkk",props.route.params.uid)
-    // setMessages([
-    //   {
-    //     _id: 1,
-    //     text: 'Hello developer',
-    //     createdAt: new Date(),
-    //     user: {
-    //       _id: 2,
-    //       name: 'React Native',
-    //       avatar: 'https://placeimg.com/140/140/any',
-    //     },
-    //   },
-    //   {
-    //     _id: 2,
-    //     text: 'Hello developer',
-    //     createdAt: new Date(),
-    //     user: {
-    //       _id: 1,
-    //       name: 'React Native',
-    //       avatar: 'https://placeimg.com/140/140/any',
-    //     },
-    //   },
-    // ])
+    
+    fetchMessages()
+   
+
     // Enable pusher logging - don't include this in production
-//       Pusher.logToConsole = true;
+      Pusher.logToConsole = true;
 
-//       var pusher = new Pusher('850c7f177de91b1863d2', {
-//         cluster: 'eu'
-//       });
+      var pusher = new Pusher('850c7f177de91b1863d2', {
+        cluster: 'eu'
+      });
 
-//       var channel = pusher.subscribe('chat');
-//       channel.bind('chat', function(data) {
-//         alert(JSON.stringify(data));
-// });
+      var channel = pusher.subscribe('chat.' + props.route.params.uid);
+      channel.bind('chat', function(data) {
+        console.log(data['message'].id)
+        const newArray = { _id: data['message'].id, createdAt: data['message'].created_at, text: data['message'].message, user: { _id: data['user'].id, name: data['user'].first_name }}
+        setMessages(previousMessages => GiftedChat.append(previousMessages, newArray))
+        console.log(JSON.stringify(data))
+        // alert(JSON.stringify(data));
+        // data['user'].first_name
+});
 
-    // return (() => {
-    //   pusher.unsubscribe('chat')
-      // pusher.unsubscribe(‘channel_name2’)
-  // })
+    return (() => {
+      pusher.unsubscribe('chat.'+ props.route.params.uid)
+      pusher.unsubscribe('chat')
+  })
 },[]);
-  // useEffect(() => {
-   
-  
-  //   const chatChannel = pusher.subscribe('chat');
-  //   chatChannel.bind('pusher:subscription_succeeded', () => { // (3)
-  //     chatChannel.bind('join', (data) => { // (4)
-  //       handleJoin(data.name);
-  //     }); });
-  //     // chatChannel.bind('chat', function(data) {
-  //     //     // alert(data);
-  //     //     // setrightMessages(data)
-  //     //     console.log("dd",data)
-  //     // });
-  
-  //   setMessages([
-  //     {
-  //       _id: 1,
-  //       text: 'Hello developer',
-  //       createdAt: new Date(),
-  //       user: {
-  //         _id: 2,
-  //         name: 'React Native',
-  //         avatar: 'https://placeimg.com/140/140/any',
-  //       },
-        
-  //     },
-  //     {
-  //       _id: 5,
-  //       text: 'Hello developer',
-  //       createdAt: new Date(),
-  //       user: {
-  //         _id: 4,
-  //         name: 'React Native',
-  //         avatar: 'https://placeimg.com/140/140/any',
-  //       },
-  //     },
-  //   ]);
-
-   
-  // }, [])
 
 
   const fetchMessages = async () => {
     const res = await axios.get(
-      "http://127.0.0.1:8000/api/messages",
+      "http://127.0.0.1:8000/api/messages/" + props.route.params.uid,
       {
         headers: {
           "content-Type": "application/json",
           Authorization:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTYzNTcxMzIwMiwiZXhwIjoxNjM1NzE2ODAyLCJuYmYiOjE2MzU3MTMyMDIsImp0aSI6IjVhRDJLRXJadm5wRGxEZTkiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.X-KVtKG59LiM0otk1ccgsTUHotW5bR_YytgDCOMJMyA"
+            "Bearer " + token
         }
       }
     );
-    setMessages(res.data);
+    let posts = res.data.map((dat) => {
+      console.log(dat.user)
+      const users = dat.posts;
 
-    console.log("ttttttttttt", res.data[0]);
+      const id = dat.id;
+
+      return { id, ...users };
+    });
+
+    console.log("ttttttttttt",res.data[0]);
+    const newArray = res.data.map((message) => ({ _id: message.id, createdAt: message.created_at, text: message.message, user: { _id: message.user.id, name: message.user.first_name } }))
+    // let posts = res.data.map((dat) => {
+    //   const users = dat.posts;
+
+    //   const id = dat.id;
+
+    //   return { id, ...users };
+    // });
+    setMessages(newArray);
+
+    
   };
 
 
   const onSend = useCallback((messages = []) => {
+    console.log("kkkkkkkk",props.route.params.uid,messages)
     setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
     axios
     .post("http://127.0.0.1:8000/api/messages", {
-      message: "hhhhhhhh",
-  
+      message: messages[0].text,
+      uid : props.route.params.uid
     }, {headers: {
       "content-Type": "application/json",
       Authorization:
-        "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTYzNTYyODkwNywiZXhwIjoxNjM1NjMyNTA3LCJuYmYiOjE2MzU2Mjg5MDcsImp0aSI6IkJWOWNVS2F1amFHcTdLQVEiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.YfPgDzYTqkrXmumHTqEwwQrKMXjQExSKoYWSxk9aj0k"
+        "Bearer " + token
     }})
     .then(function (response) {
       console.log(response);
@@ -132,14 +98,21 @@ export function Chat(props) {
 
   return (
     <GiftedChat
+   
       messages={messages}
       onSend={messages => onSend(messages)}
       user={{
-        _id: 1,
+        _id: currentUser.id,
         name: 'Minecraft',
       }}
     />
   )
 }
 
-export default Chat;
+const mapStateToProps = (store) => ({
+  token: store.userState.token,
+  currentUser: store.userState.currentUser,
+});
+
+export default connect(mapStateToProps, null)(Chat);
+// export default Chat;

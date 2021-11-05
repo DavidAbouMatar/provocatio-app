@@ -12,6 +12,7 @@ import {
 } from "react-native";
 
 import Story from "react-native-story";
+
 import { connect } from "react-redux";
 import { Dimensions } from "react-native";
 import { FontAwesome as FAIcon } from "@expo/vector-icons";
@@ -21,65 +22,101 @@ import axios from "axios";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 function Feed(props) {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [likes, setLike] = useState([]);
   const [posts, setPosts] = useState(null);
+  const [stories, setStories] = useState(null);
   const [profileImage, setProfileImage] = useState(
     "https://kittyinpink.co.uk/wp-content/uploads/2016/12/facebook-default-photo-male_1-1.jpg"
   );
-  // const { usersPosts } = props;
 
-  const stories = [
-    {
-      id: "4",
-      source:
-        "https://pbs.twimg.com/profile_images/1222140802475773952/61OmyINj.jpg",
-      user: "Mustafa",
-      avatar:
-        "https://image.freepik.com/free-vector/universe-mobile-wallpaper-with-planets_79603-600.jpg"
-    },
-    {
-      id: "4",
-      source:
-        "https://image.freepik.com/free-vector/universe-mobile-wallpaper-with-planets_79603-600.jpg",
-      user: "Mustafa",
-      avatar:
-        "https://pbs.twimg.com/profile_images/1222140802475773952/61OmyINj.jpg"
-    },
-    {
-      id: "5",
-      source:
-        "https://image.freepik.com/free-vector/universe-mobile-wallpaper-with-planets_79603-600.jpg",
-      user: "Emre Yilmaz",
-      avatar:
-        "https://pbs.twimg.com/profile_images/1222140802475773952/61OmyINj.jpg"
-    },
-    {
-      id: "3",
-      source:
-        "https://pbs.twimg.com/profile_images/1222140802475773952/61OmyINj.jpg",
-      user: "Cenk Gun",
-      avatar:
-        "https://image.freepik.com/free-vector/universe-mobile-wallpaper-with-planets_79603-600.jpg"
-    }
-  ];
-
+  const { token } = props;
+  // const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTYzNjEyODcyMiwiZXhwIjoxNjM2MTMyMzIyLCJuYmYiOjE2MzYxMjg3MjIsImp0aSI6IldRQ3dXR2dCcFNxaXV2b3YiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.jgC4jTU_DiWNUHXJ_F5t0yIOGa-7L0m778JfDkv1DX0"
   useEffect(() => {
     fetchPosts();
+    fetchStories();
   }, []);
+  console.log("token", token, props);
+  const fetchStories = async () => {
+    const res = await axios.get("http://127.0.0.1:8000/api/get_stories", {
+      headers: {
+        "content-Type": "application/json",
+        Authorization: "Bearer " + token
+      }
+    });
 
+    setStories(res.data);
+    console.log("llllllllllllll", res.data);
+  };
   const fetchPosts = async () => {
     const res = await axios.get("http://127.0.0.1:8000/api/get_posts", {
       headers: {
         "content-Type": "application/json",
-        Authorization:
-          "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTYzNTU1MzcwOCwiZXhwIjoxNjM1NTU3MzA4LCJuYmYiOjE2MzU1NTM3MDgsImp0aSI6Ik1TMlh5RGl4ZkNnZ0JRc2ciLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.NonQ2GUdVllPKcGmdW-V3LXtAt1vxcbDJiojfk_RKLQ"
+        Authorization: "Bearer " + token
       }
     });
 
     setPosts(res.data);
 
-    console.log("ssssssss", res.data);
+    var like = res.data.map(function (item) {
+      if (item.is_auth_liked.length > 0) {
+        // likes.push('heart')
+        likes.push(true);
+      } else {
+        // likes.push('heart-o')
+        likes.push(false);
+      }
+    });
   };
+  function onLikePress(likeId, postId, index) {
+    if (likes[index]) {
+      let newposts = likes;
+      newposts[index] = false;
+      setLike(newposts);
+      axios
+        .post(
+          "http://127.0.0.1:8000/api/dislike_post",
+          {
+            likeId: likeId
+          },
+          {
+            headers: {
+              "content-Type": "application/json",
+              Authorization: "Bearer " + token
+            }
+          }
+        )
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    } else {
+      let newposts = likes;
+      newposts[index] = true;
+      setLike(newposts);
+
+      axios
+        .post(
+          "http://127.0.0.1:8000/api/like_post",
+          {
+            post_id: postId
+          },
+          {
+            headers: {
+              "content-Type": "application/json",
+              Authorization: "Bearer " + token
+            }
+          }
+        )
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  }
 
   // useEffect(() => {
   //     // let posts = [];
@@ -106,20 +143,25 @@ function Feed(props) {
   return (
     <View style={styles.container}>
       {/* <Text styles ={styles.text}> Stories</Text> */}
-      <View style={{ marginTop: 0, marginVertical: 0 }}>
-        <Story
-          unPressedBorderColor="#87ceeb"
-          pressedBorderColor="#87ceeb"
-          stories={stories}
-        />
-      </View>
+      {/* <View > */}
+      <Story
+        // style={{ zIndex: 3, }}
+        unPressedBorderColor="#87ceeb"
+        pressedBorderColor="#87ceeb"
+        stories={stories}
+      />
+
+      {/* </View> */}
+
       <FlatList
         numColumns={1}
         horizontal={false}
-        keyExtractor={(item, index) => {
-          return item.id;
-        }}
+        // keyExtractor={(item, index) => {
+        //   return item.id;
+        // }}
+        keyExtractor={(item) => item.id}
         data={posts}
+        extraData={likes}
         renderItem={({ item, index }) => (
           <View style={styles.contentView}>
             <View style={[styles.post, { marginTop: 0 }]}>
@@ -163,12 +205,26 @@ function Feed(props) {
                   <TouchableOpacity
                     style={[styles.postActionIcon, { paddingLeft: 0 }]}
                   >
-                    <Icon
-                      name="heart"
-                      type="font-awesome-5"
-                      size={30}
-                      background={"red"}
-                    />
+                    {likes[index] ? (
+                      <Icon
+                        name="heart"
+                        type="font-awesome"
+                        size={30}
+                        color={"red"}
+                        onPress={() =>
+                          onLikePress(item.is_auth_liked[0].id, item.id, index)
+                        }
+                      />
+                    ) : (
+                      <Icon
+                        name="heart-o"
+                        type="font-awesome"
+                        size={30}
+                        onPress={() =>
+                          onLikePress(item.is_auth_liked[0], item.id, index)
+                        }
+                      />
+                    )}
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.postActionIcon}
@@ -218,42 +274,7 @@ function Feed(props) {
       />
     </View>
 
-    // <View style={styles.containerGallery}>
-    //     <FlatList
-    //     numColumns={1}
-    //     horizontal={false}
-    //     data={posts}
-    //     renderItem={({ item }) => (
-    //         <View
-    //         style={styles.containerImage}>
-    //         <Text style={styles.container}>{item.user.name} </Text>
-    //         <Image
-    //             style={styles.image}
-    //             source={{uri: item.url}}
-    //         />
-    //         <Text
-    //         onPress={()=>
-    //             props.navigation.navigate('Comment',
-    //             {postId: item.id})
-    //         }>
-    //         View comment </Text>
-    //          </View>
-    //     )}
-    //     />
-    //     <View>
-    //         <TextInput
-    //         placeholder='comment'
-    //         onChangeText={(text) => setTtext(text)}
-    //         />
-    //         <Button
 
-    //         onPress={() => onCommentSend()}
-    //         title="send"
-    //          />
-    //     </View>
-
-    //         </View>
-    //  </View>
   );
 }
 
@@ -356,19 +377,9 @@ const styles = StyleSheet.create({
   }
 });
 
-// const mapStateToProps = (store) => ({
-//     currentUser: store.userState.currentUser,
-//     following: store.userState.following,
-//     users: store.userState.users,
-//     usersFollowingLoaded: store.userState.usersFollowingLoaded,
 
-// })
-
-// export default connect(mapStateToProps, null)(Feed);
 const mapStateToProps = (store) => ({
-  currentUser: store.userState.currentUser
-  // usersPosts: store.userState.usersPosts,
-  // feed: store.usersState.feed,
-  // usersFollowingLoaded: store.usersState.usersFollowingLoaded,
+  currentUser: store.userState.currentUser,
+  token: store.userState.token
 });
 export default connect(mapStateToProps, null)(Feed);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -8,24 +8,36 @@ import {
   TextInput
 } from "react-native";
 import axios from "axios";
+import { connect, useDispatch } from "react-redux";
+import { Card, ListItem, Input, Icon, Avatar } from "react-native-elements";
+function Comment(props) {
 
-export default function Comment(props) {
   const [comments, setComments] = useState([]);
   const [postId, setPostId] = useState("");
-  const [text, setText] = useState("");
-
+  const [text, setText] = useState(null);
+  const input = React.createRef();
+  
+  const { token } = props;
+ 
   const addComment = async () => {
     axios
-      .post("http://127.0.0.1:8000/api/add_comment", {
-        post_id: props.route.params.postId,
-        comment: text
-      }, {headers: {
-        "content-Type": "application/json",
-        Authorization:
-          "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTYzNTU1NTQ1MCwiZXhwIjoxNjM1NTU5MDUwLCJuYmYiOjE2MzU1NTU0NTAsImp0aSI6InA2ZkUwYldDOWFpVGplQXQiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.sVQxsE28uHvawfybKf6V3Gm-RqIuPQ3vPKCqpFP-qYc"
-      }})
+      .post(
+        "http://127.0.0.1:8000/api/add_comment",
+        {
+          post_id: props.route.params.postId,
+          comment: text
+        },
+        {
+          headers: {
+            "content-Type": "application/json",
+            Authorization: "Bearer " + token
+          }
+        }
+      )
       .then(function (response) {
-        console.log(response);
+        input.current.clear();
+
+        setComments((comments) => [...comments, response.data.comment[0]]);
       })
       .catch(function (error) {
         console.log(error);
@@ -38,15 +50,12 @@ export default function Comment(props) {
       {
         headers: {
           "content-Type": "application/json",
-          Authorization:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTYzNTU1NTQ1MCwiZXhwIjoxNjM1NTU5MDUwLCJuYmYiOjE2MzU1NTU0NTAsImp0aSI6InA2ZkUwYldDOWFpVGplQXQiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.sVQxsE28uHvawfybKf6V3Gm-RqIuPQ3vPKCqpFP-qYc"
+          Authorization: "Bearer " + token
         }
       }
     );
 
     setComments(res.data);
-
-    console.log("ttttttttttt", res.data[0]);
   };
 
   useEffect(() => {
@@ -101,17 +110,20 @@ export default function Comment(props) {
         }}
       >
         <View style={styles.inputContainer}>
-          <TextInput
+          
+          <Input
+            ref={input}
+            
             style={styles.input}
             multiline={true}
             numberOfLines={3}
             placeholder="Add a comment.."
-            onChangeText={text => setText(text)}
-           
+            onChangeText={(text) => setText(text)}
           />
           <View style={styles.inputTextContainer}>
-            <Text onPress={() => addComment()  }
-                    style={styles.inputText}>Post</Text>
+            <Text onPress={() => addComment()} style={styles.inputText}>
+              Post
+            </Text>
           </View>
         </View>
       </View>
@@ -126,13 +138,13 @@ const styles = StyleSheet.create({
   commentContainer: {
     paddingRight: 16,
     paddingVertical: 12,
-
+    backgroundColor: "#ffffff",
     flexDirection: "row",
     alignItems: "flex-start"
   },
   content: {
     marginLeft: 16,
-    backgroundColor: "#ffffff",
+
     borderRadius: 25,
     flex: 1
   },
@@ -153,5 +165,25 @@ const styles = StyleSheet.create({
 
   name: {
     fontWeight: "bold"
+  },
+  inputContainer: {
+    width: "80%",
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  input: {
+    width: 70
+  },
+  inputText: {
+    fontWeight: "bold",
+    fontSize: 20,
+    color: "blue",
+    paddingRight: 5
   }
 });
+const mapStateToProps = (store) => ({
+  currentUser: store.userState.currentUser,
+  token: store.userState.token,
+});
+
+export default connect(mapStateToProps, null)(Comment);

@@ -1,5 +1,6 @@
 import { Alert } from "react-native";
 import {
+  SET_LOGIN_STATE,
   USER_STATE_CHANGE,
   USER_POSTS_STATE_CHANGE,
   USERS_DATA_STATE_CHANGE
@@ -7,7 +8,7 @@ import {
 import axios from "axios";
 import { NavigationContainer } from "@react-navigation/native";
 //3 -17
-
+const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTYzNjE0ODU2NiwiZXhwIjoxNjM2MTUyMTY2LCJuYmYiOjE2MzYxNDg1NjYsImp0aSI6ImYzMXYxOHpubUJhaG9paGQiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.vVj6Gqr4TbpCjsaoJftOjk60u-yfaHJuelwdI-YDiiI"
 export function fetchUserPosts() {
   // console.log("PPOSSSYTTT")
   // 9-12
@@ -17,7 +18,7 @@ export function fetchUserPosts() {
         headers: {
           "content-Type": "application/json",
           Authorization:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTYzNTU1MzcwOCwiZXhwIjoxNjM1NTU3MzA4LCJuYmYiOjE2MzU1NTM3MDgsImp0aSI6Ik1TMlh5RGl4ZkNnZ0JRc2ciLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.NonQ2GUdVllPKcGmdW-V3LXtAt1vxcbDJiojfk_RKLQ"
+            "Bearer " + token
         }
       })
       .then((response) => {
@@ -29,10 +30,10 @@ export function fetchUserPosts() {
           return { id, ...users };
         });
 
-        dispatch({
-          type: USER_POSTS_STATE_CHANGE,
-          posts: posts
-        });
+        // dispatch({
+        //   type: USER_POSTS_STATE_CHANGE,
+        //   usersPosts: posts
+        // });
         console.log("fetchUserPosts", posts);
 
         console.log("response", posts);
@@ -46,12 +47,13 @@ export function fetchUserPosts() {
 export function fetchUser() {
   console.log("PPOSSSYTTT");
   return (dispatch) => {
-    axios
+    console.log("PPOSSSYTT2");
+   return  axios
       .get("http://127.0.0.1:8000/api/current_user", {
         headers: {
           "content-Type": "application/json",
           Authorization:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTYzNTU1MzcwOCwiZXhwIjoxNjM1NTU3MzA4LCJuYmYiOjE2MzU1NTM3MDgsImp0aSI6Ik1TMlh5RGl4ZkNnZ0JRc2ciLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.NonQ2GUdVllPKcGmdW-V3LXtAt1vxcbDJiojfk_RKLQ"
+            "Bearer " + token
         }
       })
       .then((response) => {
@@ -73,9 +75,8 @@ export function fetchUsersData() {
         headers: {
           "content-Type": "application/json",
           Authorization:
-            "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTYzNTU1MzcwOCwiZXhwIjoxNjM1NTU3MzA4LCJuYmYiOjE2MzU1NTM3MDgsImp0aSI6Ik1TMlh5RGl4ZkNnZ0JRc2ciLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.NonQ2GUdVllPKcGmdW-V3LXtAt1vxcbDJiojfk_RKLQ"
-        }
-      })
+            "Bearer "+ token
+      }})
 
       .then((response) => {
         dispatch({ type: USER_POSTS_STATE_CHANGE, usersPosts: response.data });
@@ -186,48 +187,60 @@ export function fetchUsersFollowingPosts(uid) {
   };
 }
 
-export const login = (loginInput) => {
-  const data = {
-    email: loginInput["email"]["email"],
-    password: loginInput["password"]["password"]
-  };
-  console.log(loginInput["email"]["email"]);
-  // const { email, password } = loginInput;
-  // return (dispatch) => {  // don't forget to use dispatch here!
-  console.log(data);
+// export const login = (loginInput) => {
+//   const data = {
+//     email: loginInput["email"]["email"],
+//     password: loginInput["password"]["password"]
+//   };
+//   console.log(loginInput["email"]["email"]);
+//   // const { email, password } = loginInput;
+//   // return (dispatch) => {  // don't forget to use dispatch here!
+//   console.log(data);
 
-  let res = fetch("http://127.0.0.1:8000/api/login", {
-    method: "POST",
-    headers: {
-      // these could be different for your API call
-      Accept: "application/json",
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  });
-  dispatch(
-    initialState({
-      type: USER_STATE_CHANGE,
-      currentUser: res.data
+//   let res = fetch("http://127.0.0.1:8000/api/login", {
+//     method: "POST",
+//     headers: {
+//       // these could be different for your API call
+//       Accept: "application/json",
+//       "Content-Type": "application/json"
+//     },
+//     body: JSON.stringify(data)
+//   })
+//   .then((response) => {
+//     console.log(response)
+//     });
+//   dispatch({
+//     type: SET_LOGIN_STATE,
+//     isLoggedIn: true
+//   });
+//   NavigationContainer.navigate("Main");
+
+// };
+export const login = (loginInput) => async (dispatch) => {
+// export function login(loginInput) {
+
+  console.log("PPOSSSYTTT")
+  // return (dispatch) => {
+ 
+    axios.post("http://127.0.0.1:8000/api/login", {
+      email: loginInput["email"]["email"],
+      password: loginInput["password"]["password"]
+      
+    }, {headers: {
+      "content-Type": "application/json",
+    
+    }})
+    .then(function (response) {
+      dispatch({
+        type: SET_LOGIN_STATE,
+        isLoggedIn: true
+      });
+      console.log(response);
     })
-  );
-  NavigationContainer.navigate("Main");
-  // .then((response) => response.json())
+    .catch(function (error) {
+      console.log(error);
+    });
 
-  // .then((json) => {
-  //   if (json) { // response success checking logic could differ
-  //     // dispatch(setLoginState({ ...json, userId: username })); // our action is called here
-  //     res = json
+  // };
+  };
 
-  //     console.log(loginInput);
-  //   } else {
-
-  //     Alert.alert('Login Failed', 'Username or Password is incorrect');
-  //   }
-  // })
-  // .catch((err) => {
-  //     console.log("fffffffff");
-  //   Alert.alert('Login Failed', 'Some error occured, please retry');
-  //   console.log(err);
-  // });
-};

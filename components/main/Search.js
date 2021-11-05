@@ -7,11 +7,14 @@ import {
   TouchableOpacity
 } from "react-native";
 import { ListItem, SearchBar, Avatar } from "react-native-elements";
+import { connect } from "react-redux";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { Icon } from "react-native-elements";
 
-export default function Search(props) {
+function Search(props) {
   const [user, setUsers] = useState([]);
   const [search, setSearch] = useState([]);
+  const { token } = props;
 
   const fetchUsers = (search) => {
     setSearch(search);
@@ -21,8 +24,7 @@ export default function Search(props) {
       headers: new Headers({
         "Content-Type": "application/json",
         "content-Type": "application/json",
-        Authorization:
-          "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTYzNTUxOTIwMiwiZXhwIjoxNjM1NTIyODAyLCJuYmYiOjE2MzU1MTkyMDIsImp0aSI6IkU3ZmZZTGx0YVIyYWg4aFAiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.W3RuclaHyscXBHUjyN_Njnt_uWjulsEzP8t868FMDz8"
+        Authorization: "Bearer " + token
       })
     })
       .then((response) => response.json())
@@ -115,3 +117,12 @@ export default function Search(props) {
     </View>
   );
 }
+const mapStateToProps = (store) => ({
+  // usersPosts: store.userState.usersPosts,
+  currentUser: store.userState.currentUser,
+  token: store.userState.token
+
+  // following: store.userState.following,
+});
+
+export default connect(mapStateToProps, null)(Search);

@@ -21,6 +21,7 @@
     "expo-image-picker": "~10.2.2",
     "expo-linear-gradient": "~9.2.0",
     "expo-modal": "^1.0.9",
+    "expo-notifications": "~0.12.3",
     "expo-status-bar": "~1.0.4",
     "pusher-js": "^7.0.3",
     "react": "16.13.1",
@@ -33,6 +34,7 @@
     "react-native-insta-story": "^1.1.1",
     "react-native-modalbox": "^2.0.2",
     "react-native-paper": "^4.9.2",
+    "react-native-paper-toast": "^1.2.0",
     "react-native-raw-bottom-sheet": "^2.2.0",
     "react-native-reanimated": "~2.2.0",
     "react-native-safe-area-context": "3.2.0",
@@ -45,8 +47,7 @@
     "react-redux": "^7.2.5",
     "redux": "^4.1.1",
     "redux-persist": "^6.0.0",
-    "redux-thunk": "^2.3.0",
-    "expo-notifications": "~0.12.3"
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"

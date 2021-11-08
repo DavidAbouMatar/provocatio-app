@@ -17,6 +17,9 @@ import ChallengesScreen from "./components/main/Challenges";
 import testhcreen from "./components/main/test";
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
+import { ToastProvider } from 'react-native-paper-toast';
 
 // import saveScreen from './components/main/Save'
 import SaveScreen from "./components/main/Save";
@@ -93,6 +96,9 @@ export default function App(props) {
   }
   return (
     <Provider store={store}>
+        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <PaperProvider theme={DefaultTheme}>
+        <ToastProvider>
       <NavigationContainer>
         {/* navigation={this.props.navigation} */}
         <Stack.Navigator initialRouteName="Main">
@@ -135,6 +141,9 @@ export default function App(props) {
           />
         </Stack.Navigator>
       </NavigationContainer>
+      </ToastProvider>
+      </PaperProvider>
+    </SafeAreaProvider>
     </Provider>
   );
 }

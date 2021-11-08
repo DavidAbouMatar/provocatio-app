@@ -7,7 +7,7 @@ import {
   Text,
   Image,
   FlatList,
-  Button,
+
   TouchableOpacity,
   Alert,
   Pressable
@@ -20,7 +20,9 @@ import {
 import { connect, useDispatch } from "react-redux";
 import axios from "axios";
 import Modal from "react-native-modalbox";
-import { TextInput } from "react-native-gesture-handler";
+import { Card, Button, Title, Paragraph,TextInput } from "react-native-paper";
+// import { TextInput } from "react-native-gesture-handler";
+import { useToast } from 'react-native-paper-toast';
 
 // import { fetchUser, fetchUserPosts, fetchUserFollowing } from '../redux/actions/index'
 
@@ -35,7 +37,7 @@ function Profile(props) {
   const [profileImage, setProfileImage] = useState(
     "https://kittyinpink.co.uk/wp-content/uploads/2016/12/facebook-default-photo-male_1-1.jpg"
   );
-
+  const toaster = useToast();
 
 
   const { currentUser } = props;
@@ -158,6 +160,7 @@ function Profile(props) {
         }
       )
       .then(function (response) {
+        toaster.show({ message: 'Challenge sent', duration: 2000,type:'success',position:'middle' })
         console.log(response);
       })
       .catch(function (error) {
@@ -184,12 +187,18 @@ function Profile(props) {
         coverScreen={false}
         swipeArea={60}
       >
-        <View style={{ flex: 1, alignItems: "center" }}>
+          <Card>
+          <Card.Content>
+          <Title>Send Challenge</Title>
           <TextInput
             style={{
               width: "90%",
-              borderRadius: 10,
+              borderColor:'blue',
+              borderWidth:1,
+              borderRadius: 5,
+              marginTop:20,
               borderRightColor: "#000",
+              outline: 'none',
               padding: 5
             }}
             placeholder="Add discription here"
@@ -197,7 +206,18 @@ function Profile(props) {
             numberOfLines={5}
             onChangeText={(description) => setDiscription(description)}
           />
-          <View
+          </Card.Content>
+          <Card.Actions style={{ alignSelf: "flex-end"}}>
+          <Button
+            onPress={() => setModalVisible(false)}>Cancel</Button>
+            <Button
+             onPress={() => challenge()}>Challenge</Button>
+           
+          </Card.Actions>
+        </Card>
+        {/* <View style={{ flex: 1, alignItems: "center" }}> */}
+          
+          {/* <View
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -223,21 +243,21 @@ function Profile(props) {
             <TouchableOpacity
               style={{
                 borderRadius: 5,
-
+                borderWidth:1,
                 width: 50,
                 height: 40,
-                backgroundColor: "red",
-                margin: 7,
+                borderColor:'blue',
+                margin: 4,
                 // textAlign: "center",
                 justifyContent: "center",
                 alignItems: "center"
               }}
               onPress={() => setModalVisible(false)}
             >
-              <Text style={{ color: "white" }}> cancel </Text>
+              <Text style={{ color: "blue" }}> cancel </Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </View> */}
       </Modal>
       <View
         style={{
@@ -269,33 +289,25 @@ function Profile(props) {
           <View
             style={{ width: "100%", flexDirection: "row", paddingLeft: 30 }}
           >
-            {/* <View style={{ flex: 1, alignItems: "center" }}>
-              <Text>39</Text>
-              <Text>Posts</Text>
-            </View> */}
             <View style={{ alignItems: "center" }}>
-              <Text>{followers}</Text>
-              <Text>followers</Text>
+              <Text style={{
+                  fontSize: 17,
+              }}>{followers}</Text>
+              <Text style={{
+                  fontSize: 17,
+              }}>followers</Text>
             </View>
             <View style={{ flex: 1, alignItems: "center" }}>
-              <Text>{user.followers_count}</Text>
-              <Text>following</Text>
+              <Text
+              style={{
+                fontSize: 17,
+            }}>{user.followers_count}</Text>
+              <Text
+              style={{
+                fontSize: 17,
+            }}>following</Text>
             </View>
           </View>
-          {/* <View
-            style={{
-              flex: 1,
-              marginTop: 5,
-              // borderWidth: 1,
-              width: "100%",
-            //   height: 50,
-            //   marginLeft: 1,
-            //   alignItems: "left",
-            }}
-          > */}
-          {/* <View style={{ width: "100%", flexDirection: "row",paddingLeft:30 }}> */}
-
-          {/* <Text>Edit Profile</Text> */}
         </View>
       </View>
       <View
@@ -319,7 +331,9 @@ function Profile(props) {
       >
         <Text
           style={{
-            fontSize: 15
+            fontSize: 12,
+            paddingLeft:7,
+            alignItems:'center'
           }}
         >
           {user.bio}
@@ -327,7 +341,7 @@ function Profile(props) {
       </View>
 
       {props.route.params.uid !== currentUser.id ? (
-        <View style={{ width: "100%", flexDirection: "row" }}>
+        <View style={{ width: "100%", flexDirection: "row",  }}>
           <View style={{ flex: 1, heigth: 31, alignItems: "center" }}>
             {!following ? (
               <TouchableOpacity
@@ -354,7 +368,7 @@ function Profile(props) {
                     fontWeight: "bold"
                   }}
                 >
-                  UnFollow
+                  Unfollow
                 </Text>
               </TouchableOpacity>
             )}
@@ -391,7 +405,7 @@ function Profile(props) {
           </View>
         </View>
       ) : (
-        <View style={{ width: "100%", flexDirection: "row", paddingRight: 30 }}>
+        <View style={{ width: "100%", flexDirection: "row", alignItems: "center"  }}>
           <View style={{ flex: 1, alignItems: "center" }}>
             <TouchableOpacity
               style={styles.buttonEdit}

@@ -172,7 +172,8 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   input: {
-    width: 70
+    width: 70,
+    pressedBorderColor:"blue"
   },
   inputText: {
     fontWeight: "bold",

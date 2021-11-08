@@ -26,9 +26,10 @@ export function Chat(props) {
       var channel = pusher.subscribe('chat.' + props.route.params.uid);
       channel.bind('chat', function(data) {
         console.log(data['message'].id)
+      if(data['user'].id != currentUser.id){
         const newArray = { _id: data['message'].id, createdAt: data['message'].created_at, text: data['message'].message, user: { _id: data['user'].id, name: data['user'].first_name }}
         setMessages(previousMessages => GiftedChat.append(previousMessages, newArray))
-        console.log(JSON.stringify(data))
+        console.log(JSON.stringify(data))}
         // alert(JSON.stringify(data));
         // data['user'].first_name
 });

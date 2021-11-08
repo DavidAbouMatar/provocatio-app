@@ -8,15 +8,18 @@ import {
 } from "react-native";
 import { Camera } from "expo-camera";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
-import { TextInput } from "react-native-gesture-handler";
+// import { TextInput } from "react-native-gesture-handler";
+import { TextInput } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 import { connect, useDispatch } from "react-redux";
 import axios from "axios";
+import { useToast } from "react-native-paper-toast";
+import { Card, Button, Title, Paragraph } from "react-native-paper";
 
 const WINDOW_HEIGHT = Dimensions.get("window").height;
 const CAPTURE_SIZE = Math.floor(WINDOW_HEIGHT * 0.08);
 
- function test(props) {
+function test(props) {
   const cameraRef = useRef();
   const [hasPermission, setHasPermission] = useState(null);
   const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
@@ -28,6 +31,7 @@ const CAPTURE_SIZE = Math.floor(WINDOW_HEIGHT * 0.08);
   const [gallery, setGallery] = useState("");
 
   const { token } = props;
+  const toaster = useToast();
 
   useEffect(() => {
     onHandlePermission();
@@ -40,37 +44,12 @@ const CAPTURE_SIZE = Math.floor(WINDOW_HEIGHT * 0.08);
       quality: 1,
       base64: true
     });
-    setImage(result.base64)
-    setIsPreview(true)
-    setType(0)
-
-    
-    // axios
-    //   .post(
-    //     "http://127.0.0.1:8000/api/upload_media",
-    //     {
-    //       image: result.base64,
-
-    //       caption: "caption"
-    //     },
-    //     {
-    //       headers: {
-    //         "content-Type": "application/json",
-    //         Authorization: "Bearer " + token
-    //       }
-    //     }
-    //   )
-    //   .then(function (response) {
-    //     setIsPreview(false);
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
-    // setType(0);
-    // setImage(result.base64);
-    // console.log("base64", result.base64);
+    setImage(result.base64);
+    setIsPreview(true);
+    setType(0);
   };
   const uploadImage = () => {
+    setIsPreview(false);
     axios
       .post(
         "http://127.0.0.1:8000/api/upload_media",
@@ -87,8 +66,16 @@ const CAPTURE_SIZE = Math.floor(WINDOW_HEIGHT * 0.08);
           }
         }
       )
+
       .then(function (response) {
-        setIsPreview(false);
+       
+        toaster.show({
+          message: "Image Saved",
+          duration: 2000,
+          type: "normal",
+          position: "middle"
+        });
+        cancelPreview()
       })
       .catch(function (error) {
         console.log(error);
@@ -124,32 +111,13 @@ const CAPTURE_SIZE = Math.floor(WINDOW_HEIGHT * 0.08);
       if (source) {
         await cameraRef.current.pausePreview();
         setIsPreview(true);
-        setType(1)
+        setType(1);
 
         let base64Img = data.uri;
 
         console.log(base64Img);
 
         setImage(base64Img);
-
-        //   fetch(apiUrl, {
-        //     body: JSON.stringify(data),
-        //     headers: {
-        //       'content-type': 'application/json'
-        //     },
-        //     method: 'POST'
-        //   })
-        //     .then(async response => {
-        //       let data = await response.json();
-        //       if (data.secure_url) {
-        //         alert('Upload successful');
-        //       }
-        //     })
-        //     .catch(err => {
-        //       alert('Cannot upload');
-        //       console.log(err);
-        //     });
-        // }
       }
     }
   };
@@ -190,32 +158,21 @@ const CAPTURE_SIZE = Math.floor(WINDOW_HEIGHT * 0.08);
                 position: "absolute",
                 flexDirection: "column",
                 width: "100%",
-                bottom: 3,
-                marginBottom: 10,
+                top: 400,
+                // marginBottom: 30,
                 alignItems: "center",
                 justifyContent: "center"
               }}
             >
-              <TextInput
-                placeholder="Caption..."
-                style={{
-                  width: "100%",
-                  height: 50,
-                  color: "white",
-                  borderWidth: 4,
-                  borderColor: "blue",
-                  borderRadius: 25
-                }}
-                onChangeText={(caption) => setCaption(caption)}
-              ></TextInput>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 onPress={() => uploadImage()}
                 style={{
                   borderWidth: 3,
                   // border: '2 solid',
                   height: 30,
                   width: 90,
-                  borderColor: "#0066FF",
+                  marginTop: 7,
+                  borderColor: "blue",
                   marginLeft: 30,
                   borderRadius: 5,
                   justifyContent: "center",
@@ -231,16 +188,36 @@ const CAPTURE_SIZE = Math.floor(WINDOW_HEIGHT * 0.08);
                 >
                   {"Save"}
                 </Text>
-
-              </TouchableOpacity>
-              {/* <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={onSnap}
-                style={styles.Save}
-              >
-                {" "}
-                <Text> Save</Text>
               </TouchableOpacity> */}
+              <Card style={styles.caption}>
+                <Card.Content>
+                  <TextInput
+                    multiline={true}
+                    placeholderTextColor='#ffffff'
+                    placeholder="Caption..."
+                    theme={{ colors: { text: '#ffffff' } }}
+                
+                    style={{
+                      width: "100%",
+                      color:'white',
+                      backgroundColor:'#000',
+                      borderColor:'white',
+
+                      // height: 50,
+                      // color: "white",
+                      borderWidth: 1,
+                      // borderColor: "blue",
+                      // borderRadius: 25
+                    }}
+                    onChangeText={(caption) => setCaption(caption)}
+                  ></TextInput>
+                </Card.Content>
+                <Card.Actions>
+                  <Button
+                     onPress={() => uploadImage()}
+                     color={"white"}>Save</Button>
+                </Card.Actions>
+              </Card>
             </View>
           </View>
         )}
@@ -256,31 +233,29 @@ const CAPTURE_SIZE = Math.floor(WINDOW_HEIGHT * 0.08);
               style={styles.capture}
             />
             <TouchableOpacity
-                onPress={() => pickImage()}
-                // style={{
-                //   borderWidth: 3,
-                //   // border: '2 solid',
-                //   height: 30,
-                //   width: 90,
-                //   borderColor: "#0066FF",
-                //   marginLeft: 30,
-                //   borderRadius: 5,
-                //   justifyContent: "center",
-                //   alignItems: "center"
-                // }}
+              onPress={() => pickImage()}
+              // style={{
+              //   borderWidth: 3,
+              //   // border: '2 solid',
+              //   height: 30,
+              //   width: 90,
+              //   borderColor: "#0066FF",
+              //   marginLeft: 30,
+              //   borderRadius: 5,
+              //   justifyContent: "center",
+              //   alignItems: "center"
+              // }}
+            >
+              <Text
+                style={{
+                  color: "blue",
+                  fontWeight: "bold",
+                  borderColor: "blue"
+                }}
               >
-                <Text
-                  style={{
-                    color: "blue",
-                    fontWeight: "bold",
-                    borderColor: "blue"
-                  }}
-                >
-                  {"Upload"}
-                </Text>
-
-              </TouchableOpacity>
-
+                {"Upload"}
+              </Text>
+            </TouchableOpacity>
           </View>
         )}
       </View>
@@ -327,10 +302,14 @@ const styles = StyleSheet.create({
   save: {
     borderRadius: 25,
     borderColor: "blue"
+  },
+  caption: {
+    backgroundColor: "#000",
+    opacity: 0.5
   }
 });
 const mapStateToProps = (store) => ({
-  token: store.userState.token,
+  token: store.userState.token
 });
 
 export default connect(mapStateToProps, null)(test);

@@ -7,13 +7,14 @@ import {
   FlatList,
   TouchableOpacity
 } from "react-native";
-import { Card, ListItem, Button, Icon, Avatar } from "react-native-elements";
+import {  ListItem, Icon, Avatar } from "react-native-elements";
 import axios from "axios";
 import { connect, useDispatch } from "react-redux";
 // import TouchableScale from 'react-native-touchable-scale';
 import { LinearGradient } from "expo-linear-gradient";
 import Modal from "react-native-modalbox";
 import { Camera } from "expo-camera";
+import { Card, Title, Paragraph,Button } from 'react-native-paper';
 import * as ImagePicker from "expo-image-picker";
 
 const Challenges = (props) => {
@@ -24,10 +25,10 @@ const Challenges = (props) => {
   const { token } = props;
 
   useEffect(() => {
-    fetchChats();
+    fetchChallenges();
   }, []);
 
-  const fetchChats = async () => {
+  const fetchChallenges = async () => {
     const res = await axios.get("http://127.0.0.1:8000/api/get_challenges", {
       headers: {
         "content-Type": "application/json",
@@ -35,7 +36,7 @@ const Challenges = (props) => {
       }
     });
 
-    setChallenges(res.data[0].challenges);
+    setChallenges(res.data[0].challenge);
   };
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -62,6 +63,8 @@ const Challenges = (props) => {
       )
       .then(function (response) {
         setModalVisible(false);
+        fetchChallenges()
+        
       })
       .catch(function (error) {
         console.log(error);
@@ -74,9 +77,31 @@ const Challenges = (props) => {
     setModalVisible(true);
   };
   return (
-    <View>
-      <Modal isOpen={modalVisible}>
-        <View style={{ flex: 1 / 2, alignItems: "center" }}>
+    <View style={styles.container}>
+      <Modal isOpen={modalVisible}
+       style={{
+        height: 100
+      }}
+      backdropPressToClose={false}
+      swipeToClose={false}
+      position="center"
+      coverScreen={false}
+      swipeArea={60}>
+        <Card>
+        <Card.Content>
+          <Title>Discription</Title>
+          <Paragraph> {description[0]}</Paragraph>
+        </Card.Content>
+        <Card.Actions >
+          <Button
+               onPress={() => setModalVisible(false)}>Cancel</Button>
+            <Button
+        onPress={() => pickImage()}>
+             Done</Button>
+           
+          </Card.Actions>
+      </Card>
+        {/* <View style={{ flex: 1 / 2, alignItems: "center" }}>
           <Text
             style={{
               width: "90%",
@@ -122,7 +147,7 @@ const Challenges = (props) => {
               <Text style={{ color: "white" }}> cancel </Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </View> */}
       </Modal>
       <FlatList
         data={challenges}
@@ -135,8 +160,13 @@ const Challenges = (props) => {
           >
             <ListItem
               bottomDivider
+              friction={90} //
+              tension={100} // These props are passed to the parent component (here TouchableScale)
+              activeScale={0.95} //
+
               style={{
-                paddingTop: 3
+                paddingTop: 4,
+             
               }}
               linearGradientProps={{
                 colors: ["#08c8f6", "#4d5dfb"],
@@ -150,10 +180,12 @@ const Challenges = (props) => {
                 rounded
               />
               <ListItem.Content>
-                <ListItem.Title style={{ fontWeight: "bold" }}>
+                <ListItem.Title style={{ fontWeight: "bold", color:'white' }}>
                   {item.first_name}
                 </ListItem.Title>
-                <ListItem.Content>{item.pivot.discription}</ListItem.Content>
+                <ListItem.Content style={{
+                  color:'white'
+                }}>{item.pivot.discription}</ListItem.Content>
               </ListItem.Content>
               <ListItem.Chevron color="white" />
             </ListItem>
@@ -167,8 +199,7 @@ const Challenges = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+
     backgroundColor: "#ffffff"
   }
 });

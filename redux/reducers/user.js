@@ -7,9 +7,9 @@ import { USER_STATE_CHANGE,USER_POSTS_STATE_CHANGE } from "../constants"
 const initialState = {
     isLoggedIn: false,
     // userId: '',
-    token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTYzNjE0ODU2NiwiZXhwIjoxNjM2MTUyMTY2LCJuYmYiOjE2MzYxNDg1NjYsImp0aSI6ImYzMXYxOHpubUJhaG9paGQiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.vVj6Gqr4TbpCjsaoJftOjk60u-yfaHJuelwdI-YDiiI',
+    token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTYzNjM2MjU5NCwiZXhwIjoxNjM2MzY2MTk0LCJuYmYiOjE2MzYzNjI1OTQsImp0aSI6ImJYS1Y0MjhFa1BjSXZaYjIiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.CVAk0nRp-nsaUU6j64NchhmlY4u0w0WZXUj-GST2MmA',
     currentUser: null,
-    usersPosts: [],
+    usersPosts: null,
     // following: [],
 }
 

@@ -57,7 +57,7 @@ const ChatList = (props) => {
               // ViewComponent={LinearGradient} // Only if no expo
             >
               <Avatar
-                source={{ uri: "https://placeimg.com/140/140/any" }}
+                source={{ uri: item.profile_picture_path }}
                 rounded
               />
               <ListItem.Content>

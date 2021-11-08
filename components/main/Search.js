@@ -18,7 +18,7 @@ function Search(props) {
 
   const fetchUsers = (search) => {
     setSearch(search);
-    console.log(search);
+    // console.log(search);
     fetch("http://127.0.0.1:8000/api/search/" + search, {
       method: "post",
       headers: new Headers({
@@ -35,12 +35,12 @@ function Search(props) {
           const data = responseData[key];
 
           const id = data.id;
-          console.log("res", responseData[key]);
+          // console.log("res", responseData[key]);
           return { id, ...data };
         });
         setUsers(users);
 
-        console.log("user", users);
+        // console.log("user", users);
 
         //     let users =data.map((responseData) => {
         // //    let users = responseData.services.map(doc => {
@@ -101,7 +101,7 @@ function Search(props) {
           >
             <ListItem bottomDivider>
               <Avatar
-                source={{ uri: "https://placeimg.com/140/140/any" }}
+                source={{ uri: item.profile_picture_path  }}
                 rounded
               />
               <ListItem.Content>

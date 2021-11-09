@@ -7,7 +7,6 @@ import {
   Text,
   Image,
   FlatList,
-
   TouchableOpacity,
   Alert,
   Pressable
@@ -20,11 +19,8 @@ import {
 import { connect, useDispatch } from "react-redux";
 import axios from "axios";
 import Modal from "react-native-modalbox";
-import { Card, Button, Title, Paragraph,TextInput } from "react-native-paper";
-// import { TextInput } from "react-native-gesture-handler";
-import { useToast } from 'react-native-paper-toast';
-
-// import { fetchUser, fetchUserPosts, fetchUserFollowing } from '../redux/actions/index'
+import { Card, Button, Title, Paragraph, TextInput } from "react-native-paper";
+import { useToast } from "react-native-paper-toast";
 
 function Profile(props) {
   const navigation = props.navigation;
@@ -39,7 +35,6 @@ function Profile(props) {
   );
   const toaster = useToast();
 
-
   const { currentUser } = props;
   const { token } = props;
 
@@ -52,7 +47,6 @@ function Profile(props) {
     }
   }, [props.route.params.uid]);
 
-  // }, [ props.route.params.uid, props.posts])
   const fetchUserProfile = async (id) => {
     const res = await axios.get(
       "http://127.0.0.1:8000/api/get_user_profile/" + id,
@@ -95,7 +89,6 @@ function Profile(props) {
 
   const onfollow = () => {
     // post follow
-    console.log("follow", props.route.params.uid);
     axios
       .post(
         "http://127.0.0.1:8000/api/follow",
@@ -160,7 +153,12 @@ function Profile(props) {
         }
       )
       .then(function (response) {
-        toaster.show({ message: 'Challenge sent', duration: 2000,type:'success',position:'middle' })
+        toaster.show({
+          message: "Challenge sent",
+          duration: 2000,
+          type: "success",
+          position: "middle"
+        });
         console.log(response);
       })
       .catch(function (error) {
@@ -175,7 +173,6 @@ function Profile(props) {
 
   return (
     <View style={styles.container}>
-    
       <Modal
         isOpen={modalVisible}
         style={{
@@ -187,77 +184,31 @@ function Profile(props) {
         coverScreen={false}
         swipeArea={60}
       >
-          <Card>
+        <Card>
           <Card.Content>
-          <Title>Send Challenge</Title>
-          <TextInput
-            style={{
-              width: "90%",
-              borderColor:'blue',
-              borderWidth:1,
-              borderRadius: 5,
-              marginTop:20,
-              borderRightColor: "#000",
-              outline: 'none',
-              padding: 5
-            }}
-            placeholder="Add discription here"
-            multiline={true}
-            numberOfLines={5}
-            onChangeText={(description) => setDiscription(description)}
-          />
+            <Title>Send Challenge</Title>
+            <TextInput
+              style={{
+                width: "90%",
+                borderColor: "blue",
+                borderWidth: 1,
+                borderRadius: 5,
+                marginTop: 20,
+                borderRightColor: "#000",
+                outline: "none",
+                padding: 5
+              }}
+              placeholder="Add discription here"
+              multiline={true}
+              numberOfLines={5}
+              onChangeText={(description) => setDiscription(description)}
+            />
           </Card.Content>
-          <Card.Actions style={{ alignSelf: "flex-end"}}>
-          <Button
-            onPress={() => setModalVisible(false)}>Cancel</Button>
-            <Button
-             onPress={() => challenge()}>Challenge</Button>
-           
+          <Card.Actions style={{ alignSelf: "flex-end" }}>
+            <Button onPress={() => setModalVisible(false)}>Cancel</Button>
+            <Button onPress={() => challenge()}>Challenge</Button>
           </Card.Actions>
         </Card>
-        {/* <View style={{ flex: 1, alignItems: "center" }}> */}
-          
-          {/* <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              bottom: 0,
-              position: "absolute"
-            }}
-          >
-            <TouchableOpacity
-              style={{
-                borderRadius: 5,
-                width: 120,
-                height: 40,
-                margin: 4,
-                backgroundColor: "blue",
-                // textAlign: "center",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-              onPress={() => challenge()}
-            >
-              <Text style={{ color: "white" }}> Send Challenge </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                borderRadius: 5,
-                borderWidth:1,
-                width: 50,
-                height: 40,
-                borderColor:'blue',
-                margin: 4,
-                // textAlign: "center",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={{ color: "blue" }}> cancel </Text>
-            </TouchableOpacity>
-          </View>
-        </View> */}
       </Modal>
       <View
         style={{
@@ -290,22 +241,36 @@ function Profile(props) {
             style={{ width: "100%", flexDirection: "row", paddingLeft: 30 }}
           >
             <View style={{ alignItems: "center" }}>
-              <Text style={{
-                  fontSize: 17,
-              }}>{followers}</Text>
-              <Text style={{
-                  fontSize: 17,
-              }}>followers</Text>
+              <Text
+                style={{
+                  fontSize: 17
+                }}
+              >
+                {followers}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 17
+                }}
+              >
+                followers
+              </Text>
             </View>
             <View style={{ flex: 1, alignItems: "center" }}>
               <Text
-              style={{
-                fontSize: 17,
-            }}>{user.followers_count}</Text>
+                style={{
+                  fontSize: 17
+                }}
+              >
+                {user.followers_count}
+              </Text>
               <Text
-              style={{
-                fontSize: 17,
-            }}>following</Text>
+                style={{
+                  fontSize: 17
+                }}
+              >
+                following
+              </Text>
             </View>
           </View>
         </View>
@@ -332,8 +297,8 @@ function Profile(props) {
         <Text
           style={{
             fontSize: 12,
-            paddingLeft:7,
-            alignItems:'center'
+            paddingLeft: 7,
+            alignItems: "center"
           }}
         >
           {user.bio}
@@ -341,7 +306,7 @@ function Profile(props) {
       </View>
 
       {props.route.params.uid !== currentUser.id ? (
-        <View style={{ width: "100%", flexDirection: "row",  }}>
+        <View style={{ width: "100%", flexDirection: "row" }}>
           <View style={{ flex: 1, heigth: 31, alignItems: "center" }}>
             {!following ? (
               <TouchableOpacity
@@ -405,7 +370,9 @@ function Profile(props) {
           </View>
         </View>
       ) : (
-        <View style={{ width: "100%", flexDirection: "row", alignItems: "center"  }}>
+        <View
+          style={{ width: "100%", flexDirection: "row", alignItems: "center" }}
+        >
           <View style={{ flex: 1, alignItems: "center" }}>
             <TouchableOpacity
               style={styles.buttonEdit}

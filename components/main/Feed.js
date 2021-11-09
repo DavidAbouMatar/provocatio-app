@@ -1,5 +1,5 @@
 import { NavigationContainer } from "@react-navigation/native";
-import React, { useState, useEffect,useCallback  } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   View,
@@ -11,7 +11,6 @@ import {
   TextInput,
   TouchableOpacity
 } from "react-native";
-
 
 import Story from "react-native-story";
 
@@ -27,14 +26,14 @@ function Feed(props) {
   const [likes, setLike] = useState([]);
   const [posts, setPosts] = useState(null);
   const [stories, setStories] = useState(null);
-  const [likesRebder, setLikesRender] = useState('');
+  const [likesRebder, setLikesRender] = useState("");
 
   const [profileImage, setProfileImage] = useState(
     "https://kittyinpink.co.uk/wp-content/uploads/2016/12/facebook-default-photo-male_1-1.jpg"
   );
   const { usersPosts } = props;
   const { token } = props;
-  // const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTYzNjEyODcyMiwiZXhwIjoxNjM2MTMyMzIyLCJuYmYiOjE2MzYxMjg3MjIsImp0aSI6IldRQ3dXR2dCcFNxaXV2b3YiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.jgC4jTU_DiWNUHXJ_F5t0yIOGa-7L0m778JfDkv1DX0"
+
   useEffect(() => {
     fetchPosts();
     fetchStories();
@@ -49,7 +48,6 @@ function Feed(props) {
     });
 
     setStories(res.data);
-
   };
   const fetchPosts = async () => {
     const res = await axios.get("http://127.0.0.1:8000/api/get_posts", {
@@ -63,20 +61,16 @@ function Feed(props) {
 
     var like = res.data.map(function (item) {
       if (item.is_auth_liked.length > 0) {
-        // likes.push('heart')
         likes.push(true);
       } else {
-        // likes.push('heart-o')
         likes.push(false);
       }
     });
   };
   function onLikePress(likeId, postId, index) {
-   
     if (likes[index]) {
-      // let newposts = likes;
-      setLikesRender( Math.random() * 10)
-     
+      setLikesRender(Math.random() * 10);
+
       likes[index] = false;
       setLike(likes);
       axios
@@ -99,7 +93,7 @@ function Feed(props) {
           console.log(error);
         });
     } else {
-      setLikesRender( Math.random() * 10)
+      setLikesRender(Math.random() * 10);
       let newposts = likes;
       newposts[index] = true;
       setLike(newposts);
@@ -126,107 +120,104 @@ function Feed(props) {
     }
   }
 
-  const renderItem= useCallback(
-({ item, index }) => (
-    <View style={styles.contentView}>
-      <View style={[styles.post, { marginTop: 0 }]}>
-        <View style={styles.postHeader}>
-         
-          {item.user.profile_picture_path !== null ? (
-            <Image
-              style={styles.postUserImage}
-              source={{ uri: item.user.profile_picture_path }}
-            />
-          ) : (
-            <Image
-              style={styles.postUserImage}
-              source={{ uri: "https://kittyinpink.co.uk/wp-content/uploads/2016/12/facebook-default-photo-male_1-1.jpg" }}
-            />
-          )}
-       
-          <Text style={styles.postUsernameText}>
-            {" "}
-            {item.user.first_name}
-          </Text>
-        </View>
-        <View style={styles.postContent}>
-          <Image
-            style={styles.postImage}
-            source={{
-              uri: item.path
-            }}
-          />
-        </View>
+  const renderItem = useCallback(
+    ({ item, index }) => (
+      <View style={styles.contentView}>
+        <View style={[styles.post, { marginTop: 0 }]}>
+          <View style={styles.postHeader}>
+            {item.user.profile_picture_path !== null ? (
+              <Image
+                style={styles.postUserImage}
+                source={{ uri: item.user.profile_picture_path }}
+              />
+            ) : (
+              <Image
+                style={styles.postUserImage}
+                source={{
+                  uri: "https://kittyinpink.co.uk/wp-content/uploads/2016/12/facebook-default-photo-male_1-1.jpg"
+                }}
+              />
+            )}
 
-        <View style={styles.postActions}>
-          <View style={styles.postActionsLeftView}>
-            <TouchableOpacity
-              style={[styles.postActionIcon, { paddingLeft: 0 }]}
-            >
-              {likes[index] ? (
-                <Icon
-                  name="heart"
-                  type="font-awesome"
-                  size={30}
-                  color={"red"}
-                  onPress={() =>
-                    onLikePress(item.is_auth_liked[0], item.id, index)
-                  }
-                />
-              ) : (
-                <Icon
-                  name="heart-o"
-                  type="font-awesome"
-                  size={30}
-                  onPress={() =>
-                    onLikePress(item.is_auth_liked[0], item.id, index)
-                  }
-                />
-              )}
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.postActionIcon}
-              onPress={() =>
-                props.navigation.navigate("Comment", {
-                  postId: item.id,
-                  uid: item.user.uid
-                })
-              }
-            >
-              <Icon name="comment" type="font-awesome-5" size={30} />
-            </TouchableOpacity>
+            <Text style={styles.postUsernameText}> {item.user.first_name}</Text>
           </View>
-        </View>
-        <View style={styles.postDescView}>
-          <Text>
-            {"Liked by "}
-            <Text style={{ fontWeight: "bold" }}>
-              {item.likes_count}
-             
-            </Text>
-          </Text>
-          <View style={styles.postDescTextView}>
-            <Text style={styles.postDescUsernameText}>
-              {item.user.first_name}{" "}
-              <Text style={styles.postDescText}>{item.caption}</Text>
-            </Text>
+          <View style={styles.postContent}>
+            <Image
+              style={styles.postImage}
+              source={{
+                uri: item.path
+              }}
+            />
           </View>
-          <View style={{ marginTop: 10 }}>
-            <Text
-              onPress={() =>
-                props.navigation.navigate("Comment", {
-                  postId: item.id,
-                  uid: item.user.uid
-                })
-              }
-            >
-              View Comments...
+
+          <View style={styles.postActions}>
+            <View style={styles.postActionsLeftView}>
+              <TouchableOpacity
+                style={[styles.postActionIcon, { paddingLeft: 0 }]}
+              >
+                {likes[index] ? (
+                  <Icon
+                    name="heart"
+                    type="font-awesome"
+                    size={30}
+                    color={"red"}
+                    onPress={() =>
+                      onLikePress(item.is_auth_liked[0], item.id, index)
+                    }
+                  />
+                ) : (
+                  <Icon
+                    name="heart-o"
+                    type="font-awesome"
+                    size={30}
+                    onPress={() =>
+                      onLikePress(item.is_auth_liked[0], item.id, index)
+                    }
+                  />
+                )}
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.postActionIcon}
+                onPress={() =>
+                  props.navigation.navigate("Comment", {
+                    postId: item.id,
+                    uid: item.user.uid
+                  })
+                }
+              >
+                <Icon name="comment" type="font-awesome-5" size={30} />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.postDescView}>
+            <Text>
+              {"Liked by "}
+              <Text style={{ fontWeight: "bold" }}>{item.likes_count}</Text>
             </Text>
+            <View style={styles.postDescTextView}>
+              <Text style={styles.postDescUsernameText}>
+                {item.user.first_name}{" "}
+                <Text style={styles.postDescText}>{item.caption}</Text>
+              </Text>
+            </View>
+            <View style={{ marginTop: 10 }}>
+              <Text
+                onPress={() =>
+                  props.navigation.navigate("Comment", {
+                    postId: item.id,
+                    uid: item.user.uid
+                  })
+                }
+              >
+                View Comments...
+              </Text>
+            </View>
           </View>
         </View>
       </View>
-    </View>
-  ),[]);
+    ),
+    []
+  );
 
   if (posts === null) {
     return <View></View>;
@@ -234,9 +225,7 @@ function Feed(props) {
 
   return (
     <View style={styles.container}>
-
       <Story
-
         unPressedBorderColor="#87ceeb"
         pressedBorderColor="#87ceeb"
         stories={stories}
@@ -250,16 +239,13 @@ function Feed(props) {
         // keyExtractor={(item, index) => {
         //   return item.id;
         // }}
-    
+
         keyExtractor={(item) => item.id}
         data={posts}
         extraData={likesRebder}
         renderItem={renderItem}
-     
       />
     </View>
-
-
   );
 }
 
@@ -362,10 +348,9 @@ const styles = StyleSheet.create({
   }
 });
 
-
 const mapStateToProps = (store) => ({
   currentUser: store.userState.currentUser,
   token: store.userState.token,
-  usersPosts: store.userState.usersPosts,
+  usersPosts: store.userState.usersPosts
 });
 export default connect(mapStateToProps, null)(Feed);

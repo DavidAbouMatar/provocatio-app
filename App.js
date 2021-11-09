@@ -14,15 +14,12 @@ import AddScreen from "./components/main/Add";
 import ChatScreen from "./components/main/Chat";
 import EditProfileScreen from "./components/main/EditProfile";
 import ChallengesScreen from "./components/main/Challenges";
-import testhcreen from "./components/main/test";
+// import testhcreen from "./components/main/test";
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
 import { ToastProvider } from 'react-native-paper-toast';
-
-// import saveScreen from './components/main/Save'
-import SaveScreen from "./components/main/Save";
 import CommentScreen from "./components/main/Comment";
 import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
@@ -46,10 +43,7 @@ export default function App(props) {
   const change = (value) => {
     setLoggedIn(value);
   };
-//   useEffect(() => {
-    
-//     registerForPushNotifications() 
-// },[])
+
   const registerForPushNotifications = async () => { 
     if (Constants.isDevice) {
       const { status: existingStatus } = await Notifications.getPermissionsAsync();
@@ -122,12 +116,8 @@ export default function App(props) {
             component={ChatScreen}
             navigation={props.navigation}
           />
-          <Stack.Screen name="Add" component={testhcreen} />
-          <Stack.Screen
-            name="Save"
-            component={SaveScreen}
-            navigation={props.navigation}
-          />
+          <Stack.Screen name="Add" component={AddScreen} />
+       
           <Stack.Screen name="Edit Profile" component={EditProfileScreen} />
           <Stack.Screen name="Challenges" component={ChallengesScreen} />
           <Stack.Screen

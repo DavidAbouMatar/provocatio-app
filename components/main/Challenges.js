@@ -7,14 +7,13 @@ import {
   FlatList,
   TouchableOpacity
 } from "react-native";
-import {  ListItem, Icon, Avatar } from "react-native-elements";
+import { ListItem, Icon, Avatar } from "react-native-elements";
 import axios from "axios";
-import { connect, useDispatch } from "react-redux";
-// import TouchableScale from 'react-native-touchable-scale';
+import { connect } from "react-redux";
 import { LinearGradient } from "expo-linear-gradient";
 import Modal from "react-native-modalbox";
 import { Camera } from "expo-camera";
-import { Card, Title, Paragraph,Button } from 'react-native-paper';
+import { Card, Title, Paragraph, Button } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 
 const Challenges = (props) => {
@@ -63,8 +62,7 @@ const Challenges = (props) => {
       )
       .then(function (response) {
         setModalVisible(false);
-        fetchChallenges()
-        
+        fetchChallenges();
       })
       .catch(function (error) {
         console.log(error);
@@ -78,76 +76,27 @@ const Challenges = (props) => {
   };
   return (
     <View style={styles.container}>
-      <Modal isOpen={modalVisible}
-       style={{
-        height: 100
-      }}
-      backdropPressToClose={false}
-      swipeToClose={false}
-      position="center"
-      coverScreen={false}
-      swipeArea={60}>
+      <Modal
+        isOpen={modalVisible}
+        style={{
+          height: 100
+        }}
+        backdropPressToClose={false}
+        swipeToClose={false}
+        position="center"
+        coverScreen={false}
+        swipeArea={60}
+      >
         <Card>
-        <Card.Content>
-          <Title>Discription</Title>
-          <Paragraph> {description[0]}</Paragraph>
-        </Card.Content>
-        <Card.Actions >
-          <Button
-               onPress={() => setModalVisible(false)}>Cancel</Button>
-            <Button
-        onPress={() => pickImage()}>
-             Done</Button>
-           
+          <Card.Content>
+            <Title>Discription</Title>
+            <Paragraph> {description[0]}</Paragraph>
+          </Card.Content>
+          <Card.Actions>
+            <Button onPress={() => setModalVisible(false)}>Cancel</Button>
+            <Button onPress={() => pickImage()}>Done</Button>
           </Card.Actions>
-      </Card>
-        {/* <View style={{ flex: 1 / 2, alignItems: "center" }}>
-          <Text
-            style={{
-              width: "90%",
-              borderRadius: 10,
-              border: 1,
-              padding: 5
-            }}
-          >
-            {description[0]}
-          </Text>
-
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <TouchableOpacity
-              style={{
-                borderRadius: 5,
-                width: 120,
-                height: 40,
-                margin: 4,
-                backgroundColor: "blue",
-                textAlign: "center",
-                alignItems: "center",
-                textAlignVertical: "center",
-                alignSelf: "flex-start"
-              }}
-              onPress={() => pickImage()}
-            >
-              <Text style={{ color: "white" }}> Done </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                borderRadius: 5,
-                width: 50,
-                height: 40,
-                backgroundColor: "red",
-                margin: 7,
-                textAlign: "center",
-                alignItems: "center",
-                textAlignVertical: "center",
-                alignSelf: "flex-end"
-              }}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={{ color: "white" }}> cancel </Text>
-            </TouchableOpacity>
-          </View>
-        </View> */}
+        </Card>
       </Modal>
       <FlatList
         data={challenges}
@@ -160,13 +109,11 @@ const Challenges = (props) => {
           >
             <ListItem
               bottomDivider
-              friction={90} //
-              tension={100} // These props are passed to the parent component (here TouchableScale)
-              activeScale={0.95} //
-
+              friction={90}
+              tension={100}
+              activeScale={0.95}
               style={{
-                paddingTop: 4,
-             
+                paddingTop: 4
               }}
               linearGradientProps={{
                 colors: ["#08c8f6", "#4d5dfb"],
@@ -180,12 +127,16 @@ const Challenges = (props) => {
                 rounded
               />
               <ListItem.Content>
-                <ListItem.Title style={{ fontWeight: "bold", color:'white' }}>
+                <ListItem.Title style={{ fontWeight: "bold", color: "white" }}>
                   {item.first_name}
                 </ListItem.Title>
-                <ListItem.Content style={{
-                  color:'white'
-                }}>{item.pivot.discription}</ListItem.Content>
+                <ListItem.Content
+                  style={{
+                    color: "white"
+                  }}
+                >
+                  {item.pivot.discription}
+                </ListItem.Content>
               </ListItem.Content>
               <ListItem.Chevron color="white" />
             </ListItem>

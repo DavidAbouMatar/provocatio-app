@@ -9,7 +9,6 @@ import {
 import { Card, ListItem, Button, Icon, Avatar } from "react-native-elements";
 import axios from "axios";
 import { connect, useDispatch } from "react-redux";
-// import TouchableScale from 'react-native-touchable-scale';
 import { LinearGradient } from "expo-linear-gradient";
 
 const ChatList = (props) => {
@@ -23,8 +22,7 @@ const ChatList = (props) => {
     const res = await axios.get("http://127.0.0.1:8000/api/getallchat", {
       headers: {
         "content-Type": "application/json",
-        Authorization:
-          "Bearer " + token
+        Authorization: "Bearer " + token
       }
     });
 
@@ -43,23 +41,8 @@ const ChatList = (props) => {
               props.navigation.navigate("Chat", { uid: item.pivot.id })
             }
           >
-            <ListItem
-              bottomDivider
-              // Component={TouchableScale}
-              // friction={90} //
-              // tension={100} // These props are passed to the parent component (here TouchableScale)
-              // activeScale={0.95} //
-              // linearGradientProps={{
-              //   colors: ['#08c8f6', '#4d5dfb'],
-              //   start: { x: 1, y: 0 },
-              //   end: { x: 0.2, y: 0 },
-              // }}
-              // ViewComponent={LinearGradient} // Only if no expo
-            >
-              <Avatar
-                source={{ uri: item.profile_picture_path }}
-                rounded
-              />
+            <ListItem bottomDivider>
+              <Avatar source={{ uri: item.profile_picture_path }} rounded />
               <ListItem.Content>
                 <ListItem.Title style={{ fontWeight: "bold" }}>
                   {item.first_name}
@@ -75,8 +58,6 @@ const ChatList = (props) => {
   );
 };
 
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -86,7 +67,7 @@ const styles = StyleSheet.create({
   }
 });
 const mapStateToProps = (store) => ({
-  token: store.userState.token,
+  token: store.userState.token
 });
 
 export default connect(mapStateToProps, null)(ChatList);

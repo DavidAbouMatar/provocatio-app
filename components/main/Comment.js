@@ -11,14 +11,13 @@ import axios from "axios";
 import { connect, useDispatch } from "react-redux";
 import { Card, ListItem, Input, Icon, Avatar } from "react-native-elements";
 function Comment(props) {
-
   const [comments, setComments] = useState([]);
   const [postId, setPostId] = useState("");
   const [text, setText] = useState(null);
   const input = React.createRef();
-  
+
   const { token } = props;
- 
+
   const addComment = async () => {
     axios
       .post(
@@ -110,10 +109,8 @@ function Comment(props) {
         }}
       >
         <View style={styles.inputContainer}>
-          
           <Input
             ref={input}
-            
             style={styles.input}
             multiline={true}
             numberOfLines={3}
@@ -173,7 +170,7 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 70,
-    pressedBorderColor:"blue"
+    pressedBorderColor: "blue"
   },
   inputText: {
     fontWeight: "bold",
@@ -184,7 +181,7 @@ const styles = StyleSheet.create({
 });
 const mapStateToProps = (store) => ({
   currentUser: store.userState.currentUser,
-  token: store.userState.token,
+  token: store.userState.token
 });
 
 export default connect(mapStateToProps, null)(Comment);

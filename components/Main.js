@@ -45,6 +45,7 @@ export class Main extends Component {
           <Tab.Screen
             name="Feed"
             component={FeedScreen}
+            
             options={{
               tabBarIcon: ({ color, size }) => (
                 <MaterialCommunityIcons
@@ -70,6 +71,7 @@ export class Main extends Component {
                 />
               )
             }}
+           
           />
 
           <Tab.Screen

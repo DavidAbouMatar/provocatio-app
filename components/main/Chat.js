@@ -46,6 +46,8 @@ export function Chat(props) {
     };
   }, []);
 
+
+//get old messages
   const fetchMessages = async () => {
     const res = await axios.get(
       "http://127.0.0.1:8000/api/messages/" + props.route.params.uid,
@@ -74,6 +76,7 @@ export function Chat(props) {
     setMessages(newArray);
   };
 
+  //send new message
   const onSend = useCallback((messages = []) => {
     console.log("kkkkkkkk", props.route.params.uid, messages);
     setMessages((previousMessages) =>

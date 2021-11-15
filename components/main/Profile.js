@@ -113,7 +113,7 @@ function Profile(props) {
   };
 
   const onUnfollow = () => {
-    console.log("follow", props.route.params.uid);
+    //unfollow a user
     axios
       .post(
         "http://127.0.0.1:8000/api/unfollow",
@@ -137,6 +137,7 @@ function Profile(props) {
       });
   };
 
+  //send a challenge
   const challenge = () => {
     axios
       .post(

@@ -7,54 +7,13 @@ import { USER_STATE_CHANGE,USER_POSTS_STATE_CHANGE } from "../constants"
 const initialState = {
     isLoggedIn: false,
     // userId: '',
-    token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTYzNjM2MjU5NCwiZXhwIjoxNjM2MzY2MTk0LCJuYmYiOjE2MzYzNjI1OTQsImp0aSI6ImJYS1Y0MjhFa1BjSXZaYjIiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.CVAk0nRp-nsaUU6j64NchhmlY4u0w0WZXUj-GST2MmA',
+    token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTYzNjcyNDk0NCwiZXhwIjoxNjM2NzI4NTQ1LCJuYmYiOjE2MzY3MjQ5NDUsImp0aSI6IldPdVZ0ZHpuQjRuM0N6VFIiLCJzdWIiOjEsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.pwZSz22ayx95RFWPcKKdbjGQloxi0kQaYOskh70s0ks',
     currentUser: null,
     usersPosts: null,
-    // following: [],
+
 }
 
 
-// export const user = (state = initialState, action) => {
-//     console.log('USER_POSTS_STATE_CHANGE',action)
-
-//     switch(action.type){
-     
-//         case USER_POSTS_STATE_CHANGE:
-            
-//                 return {
-//                     ...State,
-//                     usersPosts: action.usersPosts
-//                 }
-//         case USER_STATE_CHANGE:
-           
-            
-//             return {
-//                 ...State,
-//                 currentUser: action.currentUser
-//             }
-       
-//         case SET_LOGIN_STATE:
-//             console.log(SET_LOGIN_STATE)
-//             return {
-//               ...state,
-//               ...action.payload, // this is what we expect to get back from API call and login page input
-//               isLoggedIn: true, // we set this as true on login
-//             };
-       
-        
-            
-        
-//             // case USER_FOLLOWING_STATE_CHANGE:
-//             // return {
-//             //     ...State,
-//             //     following: action.following
-//             // }
-
-//         default:
-//         return state;
-
-//     }
-// }
 export const user = (state = initialState, action) => {
     console.log('USER_POSTS_STATE_CHANGE',action)
     switch (action.type) {

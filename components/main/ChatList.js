@@ -18,6 +18,7 @@ const ChatList = (props) => {
     fetchChats();
   }, []);
 
+//get all chats
   const fetchChats = async () => {
     const res = await axios.get("http://127.0.0.1:8000/api/getallchat", {
       headers: {

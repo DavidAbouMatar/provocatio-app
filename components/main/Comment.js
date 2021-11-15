@@ -18,6 +18,7 @@ function Comment(props) {
 
   const { token } = props;
 
+// add new comment
   const addComment = async () => {
     axios
       .post(
@@ -42,7 +43,8 @@ function Comment(props) {
         console.log(error);
       });
   };
-
+  
+  //get posts comments
   const fetchPosts = async (pid) => {
     const res = await axios.get(
       "http://127.0.0.1:8000/api/get_comment/" + pid,
@@ -58,7 +60,7 @@ function Comment(props) {
   };
 
   useEffect(() => {
-    console.log("comment", props.route.params.postId);
+  
     fetchPosts(props.route.params.postId);
   }, [props.route.params.postId]);
 

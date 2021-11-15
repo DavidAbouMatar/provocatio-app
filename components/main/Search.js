@@ -16,6 +16,7 @@ function Search(props) {
   const [search, setSearch] = useState([]);
   const { token } = props;
 
+  //get all users similar to input
   const fetchUsers = (search) => {
     setSearch(search);
     fetch("http://127.0.0.1:8000/api/search/" + search, {

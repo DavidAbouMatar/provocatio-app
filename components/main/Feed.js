@@ -49,6 +49,8 @@ function Feed(props) {
 
     setStories(res.data);
   };
+
+  //get all posts
   const fetchPosts = async () => {
     const res = await axios.get("http://127.0.0.1:8000/api/get_posts", {
       headers: {
@@ -67,6 +69,7 @@ function Feed(props) {
       }
     });
   };
+  //like or unlike
   function onLikePress(likeId, postId, index) {
     if (likes[index]) {
       setLikesRender(Math.random() * 10);

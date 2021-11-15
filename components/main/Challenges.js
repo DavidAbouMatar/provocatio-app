@@ -27,6 +27,8 @@ const Challenges = (props) => {
     fetchChallenges();
   }, []);
 
+
+  //gets alll challenges
   const fetchChallenges = async () => {
     const res = await axios.get("http://127.0.0.1:8000/api/get_challenges", {
       headers: {
@@ -37,6 +39,7 @@ const Challenges = (props) => {
 
     setChallenges(res.data[0].challenge);
   };
+  //picks an image from gallery
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -68,7 +71,7 @@ const Challenges = (props) => {
         console.log(error);
       });
   };
-
+  //pass data to model
   const passToModal = (description, name, uid) => {
     setModalVisible(false);
     setDescription([description, name, uid]);
@@ -89,7 +92,7 @@ const Challenges = (props) => {
       >
         <Card>
           <Card.Content>
-            <Title>Discription</Title>
+            <Title>Description</Title>
             <Paragraph> {description[0]}</Paragraph>
           </Card.Content>
           <Card.Actions>
@@ -123,7 +126,7 @@ const Challenges = (props) => {
               ViewComponent={LinearGradient} // Only if no expo
             >
               <Avatar
-                source={{ uri: "https://placeimg.com/140/140/any" }}
+                source={{ uri: item.profile_picture_path }}
                 rounded
               />
               <ListItem.Content>
